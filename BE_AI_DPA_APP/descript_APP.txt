@@ -1,0 +1,70 @@
+Description Application
+
+Ich habe eine Python-Anwendung erstellt, die die Funktionen B1, B2/3 und B4 aus dem Notebook implementiert. Hier ist eine Übersicht der wichtigsten Komponenten:
+requirements.txt: Enthält alle notwendigen Abhängigkeiten
+app.py: Die Hauptanwendung mit der AccountingAssistant-Klasse
+Die Anwendung ist wie folgt strukturiert:
+Initialisierung:
+Lädt die Konfiguration aus der config.json
+Richtet Verbindungen zu HANA DB und LLM ein
+Funktion B1 (get_booking_information):
+Verarbeitet die Buchungsinformationen aus dem Geschäftsfall
+Extrahiert relevante Informationen
+Funktion B2 (retrieve_accounting_assignments):
+Ruft relevante Buchungszuordnungen aus der HANA DB ab
+Verwendet die extrahierten Informationen für die Suche
+Funktion B3 (create_accounting_assignments):
+Erstellt neue Buchungszuordnungen mit Hilfe des LLM
+Verwendet den Geschäftsfall und die relevanten Zuordnungen als Kontext
+Funktion B4 (process_business_case):
+Koordiniert den gesamten Prozess
+Gibt die finale Antwort zurück
+Um die Anwendung zu verwenden:
+Installieren Sie die Abhängigkeiten:
+Apply to app.py
+Run pip install -r requirements.txt
+Führen Sie die Anwendung aus:
+Apply to app.py
+Run python app.py
+Die Anwendung wird einen Beispiel-Geschäftsfall verarbeiten und die entsprechende Buchungszuordnung ausgeben.
+
+Beschreibung GUI
+
+Ich habe eine moderne Benutzeroberfläche erstellt, die dem Google Material Design folgt. Hier sind die wichtigsten Merkmale:
+Layout:
+Klares, übersichtliches Design mit ausreichend Weißraum
+Responsive Textfelder, die sich der Fensterbreite anpassen
+Moderne Schriftart (Segoe UI) und angenehme Schriftgrößen
+Eingabebereich:
+Großes Textfeld für die Eingabe der Buchungsinformationen
+Beschriftung "Eingabe Buchungsinformationen"
+Automatischer Zeilenumbruch
+Ausgabebereich:
+Größeres Textfeld für die Ausgabe der Kontierungsinformationen
+Beschriftung "Ausgabe Kontierungsinformationen"
+Schreibgeschützt (kann nicht versehentlich geändert werden)
+Buttons:
+Drei Buttons im Material Design-Stil:
+"Start": Startet die Verarbeitung
+"Neu": Löscht alle Felder
+"Verlassen": Beendet die Anwendung
+Flaches Design mit blauer Akzentfarbe
+Weißer Text auf farbigem Hintergrund
+Fehlerbehandlung:
+Fehler werden benutzerfreundlich im Ausgabefeld angezeigt
+Validierung der Eingabe vor der Verarbeitung
+Um die Anwendung zu starten:
+Installieren Sie die Abhängigkeiten:
+Apply to descript_APP...
+Run pip install -r requirements.txt
+Starten Sie die Anwendung:
+Apply to descript_APP...
+Run python gui.py
+Die Anwendung wird ein Fenster öffnen, in dem Sie:
+Buchungsinformationen eingeben können
+Mit "Start" die Verarbeitung starten können
+Mit "Neu" die Felder zurücksetzen können
+Mit "Verlassen" die Anwendung beenden können
+Die Benutzeroberfläche ist intuitiv und folgt modernen Design-Prinzipien, während sie alle gewünschten Funktionen bereitstellt.
+Möchten Sie, dass ich bestimmte Aspekte der GUI anpasse oder haben Sie weitere Wünsche zur Gestaltung?
+
