@@ -39,7 +39,7 @@ def load_env_variables(config_file):
 
 # B0.2 Test connection with env-Variables to SAP AI core
 from gen_ai_hub.proxy.native.openai import embeddings as openai_embeddings
-from .BE_AI_DPA_APP import InputManager
+from .InputManager import InputManager
 def test_ai_core_connection():
     """
     Testet die Verbindung zu SAP AI Core durch Senden einer Beispiel-Embedding-Anfrage.
@@ -181,42 +181,7 @@ def verify_embeddings(hana_connection):
     return vectors
 
 # # B0.7 setup class user interface
-# import ipywidgets as widgets  # type: ignore
-# from IPython.display import display, HTML  # type: ignore
-
-# class InputManager:
-#     def __init__(self):
-#         self.input_text = ""
-#         self.history = []
-#         self.button = widgets.Button(description="Senden", button_style="primary", layout=widgets.Layout(width="150px", height="40px", margin="0 0 10px 0"))
-#         input_label = widgets.HTML(value="<h3 style='margin-bottom: 10px; color: #333;'>Eingabe Buchungsinformationen</h3>")
-#         self.text_input = widgets.Textarea(value="", placeholder="Geben Sie hier Ihre Buchungsinformationen ein...", disabled=False, layout=widgets.Layout(width="800px", height="200px"))
-#         output_label = widgets.HTML(value="<h3 style='margin: 20px 0 10px 0; color: #333;'>Ausgabe Kontierungsinformationen</h3>")
-#         self.output = widgets.HTML(value="<div style='border: 1px solid #ddd; padding: 10px; background-color: white; height: 300px; width: 800px;'><p>Kontierungsinformationen werden hier ausgegeben ...</p></div>", layout=widgets.Layout(width="800px", height="150px"))
-#         self.button.on_click(self.on_button_click)
-#         content = widgets.VBox([input_label, self.button, self.text_input, output_label, self.output], layout=widgets.Layout(width="900px", align_items="flex-start"))
-#         self.container = widgets.VBox([widgets.HTML("<h1>Digitaler Buchungsassistent - Kontierungshilfe</h1>"), content], layout=widgets.Layout(width="900px", padding="20px"))
-#     def on_button_click(self, b):
-#         self.input_text = self.text_input.value
-#         self.history.append(self.input_text)
-#         self.update_output(f"Eingabe: {self.input_text}")
-#     def update_output(self, text):
-#         self.output.value = f"<div style='border: 1px solid #ddd; padding: 10px; background-color: white; height: 300px; width: 800px;'><p>{text}</p></div>"
-#     def display_widget(self):
-#         display(self.container)
-#     def get_current_input(self):
-#         return self.input_text
-#     def get_history(self):
-#         return self.history
-#     def save_history(self, filename="input_history.json"):
-#         with open(filename, "w", encoding="utf-8") as f:
-#             json.dump(self.history, f, ensure_ascii=False, indent=2)
-#     def load_history(self, filename="input_history.json"):
-#         try:
-#             with open(filename, "r", encoding="utf-8") as f:
-#                 self.history = json.load(f)
-#         except FileNotFoundError:
-#             print("Keine gespeicherte Historie gefunden.")
+from .InputManager import InputManager
 
 # B2 define Prompt (HTML and JSON versions)
 from langchain.prompts import PromptTemplate
@@ -585,8 +550,9 @@ if __name__ == "__main__":
     hana_database = create_vector_store(embeddings, hana_connection)
     verify_embeddings(hana_connection)
     
-    # Initialisiere UI manager für Jupyter
+    # Instanziiere InputManager, um die Fehler zu beheben
     input_manager = InputManager()
+
     prompt_template = prompt_template_html
     
     # B1 display UI

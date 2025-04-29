@@ -2,5 +2,6 @@
   "Buche eine Rechnung",
   "Buche eine Eingangsrechnung für Kreditor AAA mit 100 EUR.",
   "Buche eine Eingangsrechnung für Kreditor AAA mit 100 EUR und Vorsteuer 20 EUR.",
-  "Wie ist das WEtter in Frankfurt?"
+  "Wie ist das WEtter in Frankfurt?",
+  "- Als Geschäftsfall soll eine Rückstellung für eine Instandhaltungsleistung im laufenden Geschäftsjahr gebucht werden.\n  * Die Instandhaltungsleistung sollte für eine Maschine bis zum Jahresende des laufenden Geschäftsjahres durchgeführt werden.\n  * Der Kostenvoranschlag des Anbieters für die Instandhaltungsleistung beträgt im laufenden Geschäftsjahr 20.000 Euro netto.\n- Als Geschäftsfall soll weiterhin die Auflösung der Rückstellung und die Buchung der Eingangsrechnung für die Instandhaltungsmaßnahme im folgenden Geschäftsjahr gebucht werden.\n  * Die Instandhaltungsmaßnahme wird im folgenden Geschäftsjahr durchgeführt und abgerechnet. Die Rechnung enthält folgende  Informationen: Kreditor Maschinen-Meyer, Rechnungsbetrag Netto 19.500 EUR, Vorsteuer-Betrag von 3.705 EUR.\n- Als Geschäftsfall soll die gebildete Rückstellung in der Schlussbilanz des laufenden Geschäftsjahres gebucht werden.\n- Als Geschäftsfall soll die gebildete Rückstellung in der Eröffnungsbilanz des folgenden Geschäftsjahres gebucht werden."
 ]

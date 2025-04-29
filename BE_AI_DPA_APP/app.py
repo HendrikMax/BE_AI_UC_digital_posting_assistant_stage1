@@ -1,6 +1,7 @@
+#
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# app.py - Flask-Implementierung des Digitalen Buchungsassistenten
+# Flask-Implementierung des Digitalen Buchungsassistenten
 
 from flask import Flask, render_template, request, jsonify, session
 import json
@@ -8,8 +9,13 @@ import os
 import sys
 from datetime import datetime
 
+# NEU: RetrievalQA importieren
+from langchain.chains import RetrievalQA
+
 # Path zum Hauptverzeichnis hinzufügen, um Modulimporte zu ermöglichen
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+# NEU: Importiere die benötigten Module
+
 
 # Initialisiere Flask
 app = Flask(__name__)
@@ -94,7 +100,7 @@ def initialize_system():
     
     try:
         # Import der benötigten Module und Initialisierung
-        from BE_AI_DPA_APP_v1 import load_env_variables, init_llm, init_embedding_model, HanaDB, RetrievalQA, prompt_template_html
+        from modules.BE_AI_DPA_APP_v1 import load_env_variables, init_llm, init_embedding_model, HanaDB, prompt_template_html
         
         # Umgebungsvariablen laden
         config_file = "/home/user/.aicore/config.json"

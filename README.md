@@ -19,3 +19,21 @@ Module B supports the creation of account assignment information based on user i
 - **B2 - Retrieval**: Retrieving relevant account assignment information from the SAP HANA database.
 - **B3 - Response**: Creating relevant account assignment information for the business case using an LLM.
 - **B4 - Output**: Outputting the account assignment information to the user via the user interface.
+
+## Usage Instructions
+
+### Running the Application
+
+1. **Install Requirements**:
+   Ensure all required Python packages are installed. Run the following command in your terminal:
+   ```bash
+   pip install -r BE_AI_DPA_APP/requirements.txt
+   ```
+
+2. **Run the Application**:
+   Navigate to the `BE_AI_DPA_APP` directory and execute the `app.py` file:
+   ```bash
+   python BE_AI_DPA_APP/app.py
+   ```
+
+   This will start the application. Follow the on-screen instructions to interact with the digital posting assistant.

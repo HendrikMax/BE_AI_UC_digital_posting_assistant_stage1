@@ -2,5 +2,6 @@ hdbcli
 generative-ai-hub-sdk[all]
 langchain
 python-dotenv
+ipywidgets
 sqlalchemy-hana
 flask
