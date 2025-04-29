@@ -1,145 +1,145 @@
-import os
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+# app.py - Flask-Implementierung des Digitalen Buchungsassistenten
+
+from flask import Flask, render_template, request, jsonify, session
 import json
-from typing import List, Dict
-from hdbcli import dbapi
-from gen_ai_hub.proxy.langchain.openai import ChatOpenAI
-from gen_ai_hub.proxy.native.openai import embeddings
+import os
+import sys
+from datetime import datetime
 
-class AccountingAssistant:
-    def __init__(self):
-        self._load_config()
-        self._setup_connections()
+# Path zum Hauptverzeichnis hinzufügen, um Modulimporte zu ermöglichen
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+# Initialisiere Flask
+app = Flask(__name__)
+app.secret_key = os.urandom(24)
+
+# Speicherort für die Eingabehistorie
+HISTORY_FILE = "input_history.json"
+
+# Globale Variablen für die Anwendung
+input_text = ""
+history = []
+qa_chain = None
+llm = None
+hana_database = None
+
+# Lade die Eingabehistorie
+def load_history():
+    global history
+    try:
+        with open(HISTORY_FILE, "r", encoding="utf-8") as f:
+            history = json.load(f)
+    except FileNotFoundError:
+        history = []
+        print("Keine gespeicherte Historie gefunden.")
+
+# Speichere die Eingabehistorie
+def save_history():
+    with open(HISTORY_FILE, "w", encoding="utf-8") as f:
+        json.dump(history, f, ensure_ascii=False, indent=2)
+
+# Hauptroute - Startseite
+@app.route('/')
+def index():
+    return render_template('index.html', history=history)
+
+# Route für die Verarbeitung der Eingabe
+@app.route('/process', methods=['POST'])
+def process_input():
+    global input_text, history, qa_chain
+    
+    # Hole die Eingabe aus dem Formular
+    input_text = request.form.get('input_text', '')
+    
+    # Füge die Eingabe zur Historie hinzu
+    if input_text and input_text not in history:
+        history.append(input_text)
+        save_history()
+    
+    # Wenn qa_chain nicht initialisiert wurde, Fehlermeldung zurückgeben
+    if not qa_chain:
+        return jsonify({
+            "success": False,
+            "message": "Das System wurde noch nicht initialisiert. Bitte starten Sie die Anwendung neu."
+        })
+    
+    try:
+        # Führe die Anfrage durch
+        answer = qa_chain.run(input_text)
+        return jsonify({
+            "success": True,
+            "input": input_text,
+            "output": answer
+        })
+    except Exception as e:
+        return jsonify({
+            "success": False,
+            "message": f"Fehler bei der Verarbeitung: {str(e)}"
+        })
+
+# Route für den Abruf der Historie
+@app.route('/history')
+def get_history():
+    return jsonify({"history": history})
+
+# Route zum Initialisieren des Systems
+@app.route('/initialize', methods=['POST'])
+def initialize_system():
+    global qa_chain, llm, hana_database
+    
+    # Hier würde die Initialisierungslogik aus BE_AI_DPA_APP_v1.py stehen
+    # In einer echten Implementierung würde dies möglicherweise async passieren
+    
+    try:
+        # Import der benötigten Module und Initialisierung
+        from BE_AI_DPA_APP_v1 import load_env_variables, init_llm, init_embedding_model, HanaDB, RetrievalQA, prompt_template_html
         
-    def _load_config(self):
-        """Lädt die Konfiguration aus der config.json Datei"""
+        # Umgebungsvariablen laden
         config_file = "/home/user/.aicore/config.json"
-        try:
-            with open(config_file, 'r') as file:
-                self.config = json.load(file)
-                for key, value in self.config.items():
-                    os.environ[key] = str(value)
-        except Exception as e:
-            raise ValueError(f"Fehler beim Laden der Konfiguration: {str(e)}")
+        env_variables = load_env_variables(config_file)
+        
+        # LLM und Embedding-Modelle initialisieren
+        aicore_model_name = str(os.getenv("AICORE_DEPLOYMENT_MODEL"))
+        llm = init_llm(model_name=aicore_model_name, max_tokens=4000, temperature=0)
+        
+        # HANA-DB und Vector Store initialisieren
+        ai_core_embedding_model_name = str(os.getenv("AICORE_DEPLOYMENT_MODEL_EMBEDDING"))
+        embeddings = init_embedding_model(ai_core_embedding_model_name)
+        
+        # Verbindung zur HANA-DB herstellen
+        from hdbcli import dbapi
+        hdb_host_address = str(os.getenv("hdb_host_address"))
+        hdb_user = str(os.getenv("hdb_user"))
+        hdb_password = str(os.getenv("hdb_password"))
+        hdb_port = int(os.getenv("hdb_port"))
+        hana_connection = dbapi.connect(address=hdb_host_address, port=hdb_port, user=hdb_user, password=hdb_password, autocommit=True)
+        
+        # Vector Store initialisieren
+        vector_table_name = str(os.getenv("hdb_table_name"))
+        hana_database = HanaDB(embedding=embeddings, connection=hana_connection, table_name=vector_table_name)
+        
+        # RetrievalQA Chain erstellen
+        count_retrieved_documents = 10
+        chain_type_kwargs = {"prompt": prompt_template_html}
+        retriever = hana_database.as_retriever(search_kwargs={"k": count_retrieved_documents})
+        qa_chain = RetrievalQA.from_chain_type(llm=llm, retriever=retriever, chain_type="stuff", chain_type_kwargs=chain_type_kwargs, verbose=True)
+        
+        return jsonify({
+            "success": True,
+            "message": "System erfolgreich initialisiert"
+        })
+    except Exception as e:
+        return jsonify({
+            "success": False,
+            "message": f"Fehler bei der Initialisierung: {str(e)}"
+        })
 
-    def _setup_connections(self):
-        """Richtet die Verbindungen zu HANA DB und LLM ein"""
-        # HANA DB Verbindung
-        self.hana_connection = dbapi.connect(
-            address=os.getenv("hdb_host_address"),
-            port=int(os.getenv("hdb_port")),
-            user=os.getenv("hdb_user"),
-            password=os.getenv("hdb_password"),
-            autocommit=True,
-            sslValidateCertificate=False
-        )
-        
-        # LLM Verbindung
-        self.llm = ChatOpenAI(proxy_model_name=os.getenv("AICORE_DEPLOYMENT_MODEL"))
-
-    def get_booking_information(self, business_case: str) -> Dict:
-        """
-        B1: Verarbeitet die Buchungsinformationen aus dem Geschäftsfall
-        
-        Args:
-            business_case: Der Geschäftsfall als Text
-            
-        Returns:
-            Dict mit den extrahierten Buchungsinformationen
-        """
-        # Hier wird der Geschäftsfall analysiert und strukturiert
-        # Dies ist ein Platzhalter für die tatsächliche Implementierung
-        return {
-            "business_case": business_case,
-            "extracted_info": "Extrahiert aus dem Geschäftsfall"
-        }
-
-    def retrieve_accounting_assignments(self, booking_info: Dict) -> List[Dict]:
-        """
-        B2: Ruft relevante Buchungszuordnungen aus der HANA DB ab
-        
-        Args:
-            booking_info: Die extrahierten Buchungsinformationen
-            
-        Returns:
-            Liste von relevanten Buchungszuordnungen
-        """
-        try:
-            cursor = self.hana_connection.cursor()
-            query = f"""
-                SELECT * FROM {os.getenv('hdb_table_name')}
-                WHERE business_case LIKE '%{booking_info['business_case']}%'
-            """
-            cursor.execute(query)
-            results = cursor.fetchall()
-            return [dict(zip([column[0] for column in cursor.description], row)) 
-                   for row in results]
-        except Exception as e:
-            raise Exception(f"Fehler beim Abrufen der Buchungszuordnungen: {str(e)}")
-
-    def create_accounting_assignments(self, booking_info: Dict, 
-                                    relevant_assignments: List[Dict]) -> str:
-        """
-        B3: Erstellt Buchungszuordnungen mit Hilfe des LLM
-        
-        Args:
-            booking_info: Die extrahierten Buchungsinformationen
-            relevant_assignments: Die relevanten Buchungszuordnungen
-            
-        Returns:
-            String mit den generierten Buchungszuordnungen
-        """
-        prompt = f"""
-        Basierend auf dem folgenden Geschäftsfall und den relevanten Buchungszuordnungen,
-        erstelle eine passende Buchungszuordnung:
-        
-        Geschäftsfall: {booking_info['business_case']}
-        
-        Relevante Zuordnungen: {relevant_assignments}
-        
-        Bitte erstelle eine detaillierte Buchungszuordnung mit:
-        - Konten
-        - Beträgen
-        - Buchungstexten
-        """
-        
-        response = self.llm.predict(prompt)
-        return response
-
-    def process_business_case(self, business_case: str) -> str:
-        """
-        B4: Verarbeitet den gesamten Geschäftsfall und gibt die Antwort zurück
-        
-        Args:
-            business_case: Der Geschäftsfall als Text
-            
-        Returns:
-            String mit der finalen Antwort
-        """
-        # B1: Buchungsinformationen extrahieren
-        booking_info = self.get_booking_information(business_case)
-        
-        # B2: Relevante Zuordnungen abrufen
-        relevant_assignments = self.retrieve_accounting_assignments(booking_info)
-        
-        # B3: Neue Zuordnungen erstellen
-        accounting_assignments = self.create_accounting_assignments(
-            booking_info, relevant_assignments)
-        
-        return accounting_assignments
-
-def main():
-    # Beispiel für die Verwendung
-    assistant = AccountingAssistant()
+# Starte die Anwendung, wenn das Skript direkt ausgeführt wird
+if __name__ == '__main__':
+    # Lade die Eingabehistorie beim Start
+    load_history()
     
-    business_case = """
-    Beispiel-Geschäftsfall:
-    Wir haben am 15.03.2024 Büromaterial im Wert von 500€ gekauft.
-    Die Rechnung wurde sofort bezahlt.
-    """
-    
-    result = assistant.process_business_case(business_case)
-    print("Ergebnis der Buchungszuordnung:")
-    print(result)
-
-if __name__ == "__main__":
-    main() 
+    # Starte den Flask-Server im Debug-Modus
+    app.run(debug=True, host='0.0.0.0', port=5000)
