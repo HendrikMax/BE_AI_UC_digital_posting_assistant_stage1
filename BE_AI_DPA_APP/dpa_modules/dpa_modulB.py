@@ -1,5 +1,5 @@
 # flake8: noqa
-# BE_AI_DPA_APP.py
+# dpa_modulB.py
 # Aggregated code cells from BE_AI_UC_DPA_modulB_PoC.ipynb
 
 # B0.1 install py-packages
@@ -9,6 +9,7 @@
 import json
 import os
 from dotenv import load_dotenv  # hinzugefügt
+# from .dpa_modulB_inputmanager import InputManager
 
 def load_env_variables(config_file):
     """
@@ -39,7 +40,7 @@ def load_env_variables(config_file):
 
 # B0.2 Test connection with env-Variables to SAP AI core
 from gen_ai_hub.proxy.native.openai import embeddings as openai_embeddings
-from .InputManager import InputManager
+
 def test_ai_core_connection():
     """
     Testet die Verbindung zu SAP AI Core durch Senden einer Beispiel-Embedding-Anfrage.
@@ -180,8 +181,8 @@ def verify_embeddings(hana_connection):
     print(vectors[5:10])
     return vectors
 
-# # B0.7 setup class user interface
-from .InputManager import InputManager
+# B0.7 setup class user interface
+# from .dpa_modulB_inputmanager import InputManager
 
 # B2 define Prompt (HTML and JSON versions)
 from langchain.prompts import PromptTemplate
@@ -551,20 +552,21 @@ if __name__ == "__main__":
     verify_embeddings(hana_connection)
     
     # Instanziiere InputManager, um die Fehler zu beheben
-    input_manager = InputManager()
+    # input_manager = InputManager()
 
     prompt_template = prompt_template_html
     
     # B1 display UI
-    input_manager.display_widget()
+    # input_manager.display_widget()
     
     # B3.1 run LLM with prompt template
     count_retrieved_documents = 10
-    question = input_manager.get_current_input()
+    # question = input_manager.get_current_input()
+    question = "Buchungssatz für Rückstellung buchen in Schlussbilanz"
     qa_chain = create_qa_chain(llm, hana_database, prompt_template, count_retrieved_documents)
     answer = qa_chain.run(question)
     print(answer)
     
     # B4 output: display answer
-    input_manager.update_output(answer)
-    input_manager.display_widget()
+    # input_manager.update_output(answer)
+    # input_manager.display_widget()

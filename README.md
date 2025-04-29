@@ -33,7 +33,9 @@ Module B supports the creation of account assignment information based on user i
 2. **Run the Application**:
    Navigate to the `BE_AI_DPA_APP` directory and execute the `app.py` file:
    ```bash
-   python BE_AI_DPA_APP/app.py
+   cd /home/user/projects/BE_AI_UC_digital_posting_assistant_build1/BE_AI_DPA_APP && python3 app.py
+   or
+   python3 app.py
    ```
 
    This will start the application. Follow the on-screen instructions to interact with the digital posting assistant.

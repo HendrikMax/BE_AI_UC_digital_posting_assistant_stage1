@@ -15,7 +15,14 @@ from langchain.chains import RetrievalQA
 # Path zum Hauptverzeichnis hinzufügen, um Modulimporte zu ermöglichen
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 # NEU: Importiere die benötigten Module
-
+from dpa_modules.dpa_modulB import (
+    load_env_variables, 
+    init_llm, 
+    init_embedding_model, 
+    HanaDB, 
+    prompt_template_html,
+    create_qa_chain
+)
 
 # Initialisiere Flask
 app = Flask(__name__)
@@ -99,9 +106,6 @@ def initialize_system():
     # In einer echten Implementierung würde dies möglicherweise async passieren
     
     try:
-        # Import der benötigten Module und Initialisierung
-        from modules.BE_AI_DPA_APP_v1 import load_env_variables, init_llm, init_embedding_model, HanaDB, prompt_template_html
-        
         # Umgebungsvariablen laden
         config_file = "/home/user/.aicore/config.json"
         env_variables = load_env_variables(config_file)
