@@ -184,7 +184,7 @@ def verify_embeddings(hana_connection):
 # B0.7 setup class user interface
 # from .dpa_modulB_inputmanager import InputManager
 
-# B2 define Prompt (HTML and JSON versions)
+# B2.1 define Prompt (result HTML-structure)
 from langchain.prompts import PromptTemplate
 
 prompt_template_html = """
@@ -342,6 +342,8 @@ Beispiele von Kontierungsregeln für Geschäftsfall-Kategoreien sind:
 prompt_template_html = PromptTemplate(template=prompt_template_html, input_variables=["context","question"])
 print("Prompt HTML set")
 
+
+# B2.2 define Prompt (result JSON-structure)
 prompt_template_json = """
 
 # Buchungssatz-Generator für Geschäftsfälle

@@ -2,6 +2,18 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # Flask-Implementierung des Digitalen Buchungsassistenten
+# für die SAP S/4HANA Cloud
+# Autor: [Ihr Name]
+# Datum: [Aktuelles Datum]
+# Beschreibung: Diese Anwendung ermöglicht es Benutzern, Fragen zu stellen und Antworten
+# zu erhalten, indem sie auf eine HANA-Datenbank zugreifen. Die Antworten werden mithilfe
+# von LangChain generiert. Die Anwendung speichert auch die Eingabehistorie der Benutzer
+# in einer JSON-Datei, um eine bessere Benutzererfahrung zu bieten.
+# Importiere die benötigten Module und Standardbibliotheken:
+# pip install -r requirements.txt
+# Starte App  Modul B
+# cd /home/user/projects/BE_AI_UC_digital_posting_assistant_build1/BE_AI_DPA_APP && python3 app.py
+
 
 from flask import Flask, render_template, request, jsonify, session
 import json
