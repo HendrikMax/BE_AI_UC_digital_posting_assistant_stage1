@@ -1,14 +1,29 @@
 #
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# Flask-Implementierung des Digitalen Buchungsassistenten
+# Flask-Implementierung des Digitalen Buchungsassistenten - Modul B App für Ermittlung der Kontierung aus der Kontierungsrichtlinie
 # für die SAP S/4HANA Cloud
-# Autor: [Ihr Name]
-# Datum: [Aktuelles Datum]
-# Beschreibung: Diese Anwendung ermöglicht es Benutzern, Fragen zu stellen und Antworten
-# zu erhalten, indem sie auf eine HANA-Datenbank zugreifen. Die Antworten werden mithilfe
-# von LangChain generiert. Die Anwendung speichert auch die Eingabehistorie der Benutzer
-# in einer JSON-Datei, um eine bessere Benutzererfahrung zu bieten.
+# Autor: [Hendrik Max]
+# Datum: [30.04.2025]
+# Beschreibung: 
+# Diese Anwendung ermöglicht es Benutzern, Anahnd einer GEschäftsfall-Beschreibung eine Kontierung
+# zu ermitteln. Die Antworten werden mithilfe eines Retrievals auf eine Vektordatenbank generiert. 
+# Die Anwendung speichert auch die Eingabehistorie der Benutzer in einer JSON-Datei, 
+# um eine bessere Benutzererfahrung zu bieten.
+# 
+# Architektur:
+# Die RAG-Anwendung verwendet ein Large Language Model (LLM) und ein Embedding-Modell,
+# und eine HANA-Datenbank als Vektor-Datenbank. 
+
+# Technologien:
+# - Flask: Ein leichtgewichtiges Web-Framework für Python, das die Erstellung von Webanwendungen erleichtert.
+# - Langchain: Eine Bibliothek, die den Zugriff auf verschiedene Large Language Models (LLMs) und Embedding-Modelle ermöglicht.
+# - SAP HANA: Eine In-Memory-Datenbank, die als Vektordatenbank für die Speicherung und den Abruf von Daten verwendet wird.
+# - JSON: Ein Standardformat für den Austausch von Daten, das in dieser Anwendung verwendet wird, um die Eingabehistorie zu speichern.
+# - HTML/CSS: Die Anwendung verwendet HTML und CSS für die Benutzeroberfläche.
+# - Werkzeug: Eine Sammlung von WSGI-Hilfsfunktionen, die in Flask verwendet werden.
+#
+# Aufruf:
 # Importiere die benötigten Module und Standardbibliotheken:
 # pip install -r requirements.txt
 # Starte App  Modul B
@@ -41,7 +56,7 @@ app = Flask(__name__)
 app.secret_key = os.urandom(24)
 
 # Speicherort für die Eingabehistorie
-HISTORY_FILE = "input_history.json"
+HISTORY_FILE = "input_history_modulB.json"
 
 # Globale Variablen für die Anwendung
 input_text = ""
@@ -68,7 +83,7 @@ def save_history():
 # Hauptroute - Startseite
 @app.route('/')
 def index():
-    return render_template('index.html', history=history)
+    return render_template('index_modulB.html', history=history)
 
 # Route für die Verarbeitung der Eingabe
 @app.route('/process', methods=['POST'])

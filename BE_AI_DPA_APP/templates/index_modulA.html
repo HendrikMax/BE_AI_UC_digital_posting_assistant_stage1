@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digitaler Buchungsassistent</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container mt-4">
+        <h1 class="mb-4">Digitaler Buchungsassistent - Upload Kontierungsrichtlinie   </h1>     <!-- Initialisierungsbereich -->
+        <div class="card mb-4" id="init-section">
+            <div class="card-header bg-warning">
+                System-Status
+            </div>
+            <div class="card-body">
+                <p>Die Applikation muss zuerst initialisiert werden, bevor sie verwendet werden kann.</p>
+                <button id="init-btn" class="btn btn-primary">System initialisieren</button>
+                <div id="init-status" class="mt-2"></div>
+            </div>
+        </div>
+        <!-- PDF-Upload-Bereich -->
+        <div class="card mb-4" id="pdf-upload-section" style="display:none;">
+            <div class="card-header bg-info text-white">
+                PDF-Datei hochladen
+            </div>
+            <div class="card-body">
+                <form id="pdf-upload-form" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <input class="form-control" type="file" id="pdf-file" name="file" accept="application/pdf">
+                    </div>
+                    <button type="submit" class="btn btn-info">PDF hochladen</button>
+                </form>
+                <div id="pdf-upload-status" class="mt-2"></div>
+            </div>
+        </div>
+
+        <!-- Verarbeitung Bereich -->
+        <div class="card mb-4" id="processing-section" style="display:none;">
+            <div class="card-header bg-success text-white">
+                Verarbeitung
+            </div>
+            <div class="card-body">
+                <button id="start-processing-btn" class="btn btn-success mb-3">Verarbeitung starten</button>
+                <div id="processing-status" class="mt-3"></div>
+            </div>
+        </div>
+        <!-- Verarbeitete Dateien -->
+        <div class="card mb-4">
+            <div class="card-header bg-secondary text-white">
+                Verarbeitete Dateien
+            </div>
+            <div class="card-body">
+                <ul class="list-group" id="file-list">
+                    {% for file in files %}
+                    <li class="list-group-item">{{ file }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Custom JS -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script>
+        // Zeige PDF-Upload erst nach Initialisierung
+        $(function() {
+            $('#init-btn').on('click', function() {
+                $('#init-status').text('Initialisierung läuft ...');
+                $.post('/initialize', function(data) {
+                    if(data.success) {
+                        $('#init-status').html('<span class="text-success">' + data.message + '</span>');
+                        $('#pdf-upload-section').show();
+                    } else {
+                        $('#init-status').html('<span class="text-danger">' + data.message + '</span>');
+                    }
+                });
+            });
+            $('#pdf-upload-form').on('submit', function(e) {
+                e.preventDefault();
+                var formData = new FormData(this);
+                $('#pdf-upload-status').text('Datei wird hochgeladen ...');
+                $.ajax({
+                    url: '/upload_pdf',
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function(data) {
+                        if(data.success) {
+                            $('#pdf-upload-status').html('<span class="text-success">' + data.message + '</span>');
+                            // Verarbeitung nicht mehr automatisch starten!
+                            $('#processing-section').show();
+                            $('#processing-status').html('');
+                        } else {
+                            $('#pdf-upload-status').html('<span class="text-danger">' + data.message + '</span>');
+                        }
+                    },
+                    error: function() {
+                        $('#pdf-upload-status').html('<span class="text-danger">Fehler beim Hochladen.</span>');
+                    }
+                });
+            });
+            // Verarbeitung anzeigen, wenn Dateien vorhanden sind (nur Info)
+            if($('#file-list li').length > 0) {
+                $('#processing-section').show();
+            }
+            // Verarbeitung starten Button-Handler
+            $('#start-processing-btn').on('click', function() {
+                // Hole den Dateinamen der ersten Datei in der Liste
+                var filename = $('#file-list li').first().text();
+                if (!filename) {
+                    $('#processing-status').html('<span class="text-danger">Keine Datei zum Verarbeiten gefunden.</span>');
+                    return;
+                }
+                $('#processing-status').html('Verarbeitung läuft ...');
+                $.ajax({
+                    url: '/process_file',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({filename: filename}),
+                    success: function(data) {
+                        if(data.success) {
+                            $('#processing-status').html('<span class="text-success">' + data.message + '</span>');
+                        } else {
+                            $('#processing-status').html('<span class="text-danger">' + data.message + '</span>');
+                        }
+                    },
+                    error: function() {
+                        $('#processing-status').html('<span class="text-danger">Fehler bei der Verarbeitung.</span>');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
