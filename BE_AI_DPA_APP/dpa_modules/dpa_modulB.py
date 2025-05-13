@@ -191,10 +191,9 @@ prompt_template_html = """
 
 # Buchungssatz-Generator für Geschäftsfälle
 
-## Aufgabe: Erstellung von Buchungssätzen für Geschäftsfälle anhand eines vorgegebenen Kontierungshandbuchs
+## Aufgabe: Erstellung von Buchungssätzen für Geschäftsfälle anhand eines vorgegebenen Kontierungshandbuchs in der Sprache der Eingabe
 
-Extrahiere anhand des vom Buchhalter angegebenen Geschäftsfalls die Kontierungsregeln für Konto-Soll und Konto Haben 
-aus dem Kontierungshandbuch.
+Extrahiere anhand des vom Buchhalter angegebenen Geschäftsfalls und des Kontierungshandbuchs die notwendigen Informationen für einen Buchungssatz.
 
 ## Geschäftsfall:
 
@@ -202,33 +201,34 @@ Der Geschäftsfall wird vom Buchhalter wie folgt beschrieben:
 
 {question}
 
-## Kontierungsregeln:
+## Kontierungsregeln (Kontierungshandbuch):
 
 Die Kontierungsregeln sind im Kontierungshandbuch wie folgt definiert:
 
 {context}
 
-
 ## Wichtige Hinweise
-Gehe für die Ermittlung des Buchungssatzes Schritt für Schritt vor und achte auf die folgenden Punkte:
-- Identifiziere die Kategorie des Geschäftsfalls    
-- Bestimme die wesentlichen finanziellen Merkmale und Beträge
-- Wende die Kontierungsregel an
-- Ermittle konkrete Konto-Nummern und -Bezeichnungen aus dem Kontext des Kontierungshandbuchs
-- Bestimme die exakten Buchungsbeträge (inkl. Steuern falls zutreffend)
-- Identifiziere eventuelle Besonderheiten oder Ausnahmen
+- Beachte, dass das Kontierungshandbuch (im Abschnitt "{context}") in deutscher Sprache vorliegt. Nutze diesen deutschen Text, um die notwendigen Kontierungsregeln, Kontonummern und -bezeichnungen zu ermitteln.
+- Deine *gesamte* Antwort MUSS in der Sprache des eingegebenen Geschäftsfalls ({question}) erfolgen.
+- Gehe für die Ermittlung des Buchungssatzes Schritt für Schritt vor und achte auf die folgenden Punkte:
+    + Identifiziere die Kategorie des Geschäftsfalls
+    + Bestimme die wesentlichen finanziellen Merkmale und Beträge aus dem Geschäftsfall.
+    + Wende die Kontierungsregel aus dem deutschen Kontierungshandbuch an.
+    + Ermittle konkrete Konto-Nummern und -Bezeichnungen aus dem deutschen Kontierungshandbuch.
+    + Bestimme die exakten Buchungsbeträge (inkl. Steuern falls zutreffend) aus dem Geschäftsfall.
+    + Identifiziere eventuelle Besonderheiten oder Ausnahmen.
 
 ## Vorgehen zur Lösung der Aufgabe
 
-Beachte die folgenden Schritte bei der Lösung der Aufgabe
+Beachte die folgenden Schritte bei der Lösung der Aufgabe:
 
-**Schritt 1 - Identifiziere die Geschäftsfall-Kategorie**
+**Schritt 1 - Ermittle die Zielsprache der Ausgabe und identifiziere den Geschäftsfall**
+- Erkenne zuerst die Sprache des vom Buchhalter eingegebenen Geschäftsfalls ({question}). Diese Sprache ist die alleinige Zielsprache für deine gesamte Ausgabe.
+- Identifiziere Art der Transaktion und beteiligte Wirtschaftsgüter/Leistungen im Geschäftsfall.
+- Bestimme alle relevanten Beträge inkl. Steuern im Geschäftsfall.
+- Ermittle die Geschäftsfall-Kategorie (basierend auf deinem Wissen und ggf. Begriffen aus dem {context}).
 
-- Identifiziere Art der Transaktion und beteiligte Wirtschaftsgüter/Leistungen
-- Bestimme alle relevanten Beträge inkl. Steuern
-- Ermittle die Geschäftsfall-Kategorie
-
-Beispiele für Geschäftsfall-Kategorien sind:
+Beispiele für Geschäftsfall-Kategorien sind (diese Begriffe sind nur Beispiele und müssen ggf. in die Zielsprache übersetzt werden, wenn sie in der Ausgabe verwendet werden):
 
 |Geschäftsfall-Kategorie|
 |-----------------------|
@@ -243,20 +243,20 @@ Beispiele für Geschäftsfall-Kategorien sind:
 |Rückstellung buchen in Schlussbilanz|
 |Rückstellung buchen in Eröffnungsbilanz|
 |Auflösung von Rückstellungen|
-|Eingangsrechung buchen|
+|Eingangsrechnung buchen|
 |Eingangsrechnung zahlen|
 |Zahlung der Umsatzsteuer|
 
-**Schritt 2 - Ermittle die Kontierungsregel anhand der Geschäftsfall-Kategorie aus dem Kontierungshandbuch.**
-
-- Ermittle die Kontierungsregel mit Kontotyp-Soll und Kontotyp-Haben anhand der ermittelten Geschäftsfall-Kategorien
+**Schritt 2 - Ermittle die Kontierungsregel und Konten aus dem Kontierungshandbuch ({context})**
+- Verwende die in Schritt 1 ermittelte Geschäftsfall-Kategorie und die Informationen im deutschen {context}, um die passende Kontierungsregel zu finden.
+- Ermittle die konkreten und exakten Konto-Nummern und Konto-Bezeichnungen (aus dem deutschen {context}) für Kontotyp-Soll und Kontotyp-Haben anhand der gefundenen Kontierungsregel.
 - Beachte die buchhalterischen Grundprinzipien:
     + Jede Buchung erfordert mindestens ein Soll- und Haben-Konto
     + Soll-Haben-Buchungslogik korrekt anwenden (Vermehrung Aktiva/Verminderung Passiva = SOLL; Verminderung Aktiva/Vermehrung Passiva = HABEN)
     + Buchhalterische Vollständigkeit sicherstellen (Summe SOLL = Summe HABEN)
     + Buchungssätze nach Reihenfolge der Geschäftsfälle ordnen
 
-Beispiele von Kontierungsregeln für Geschäftsfall-Kategoreien sind:
+Beispiele von Kontierungsregeln für Geschäftsfall-Kategoreien sind (die Begriffe hier dienen nur zur Orientierung, die konkreten Konten müssen aus dem {context} extrahiert und in die Zielsprache übersetzt werden):
 
 |Geschäftsfall-Kategorie|Kontotyp-Soll|Kontotyp-Haben|
 |-----------------------|----------|-----------|
@@ -272,71 +272,62 @@ Beispiele von Kontierungsregeln für Geschäftsfall-Kategoreien sind:
 |Rückstellung buchen in Schlussbilanz (Bilanz)|Rückstellungen|Schlussbilanz-Konto|
 |Rückstellung buchen in Schlussbilanz (GuV)|GuV-Konto |Aufwand für Lieferung und Leistung|
 |Rückstellung buchen in Eröffnungsbilanz|Eröffnungsbilanz-Konto|Aufwand für Lieferung und Leistung|
-|Eingangsrechung buchen|Aufwand für Lieferung und Leistung|Verbindlichkeiten oder Kreditor|
+|Eingangsrechnung buchen|Aufwand für Lieferung und Leistung|Verbindlichkeiten oder Kreditor|
 |Eingangsrechnung zahlen |Verbindlichkeiten oder Kreditor|Bank|
 |Zahlung der Umsatzsteuer|Umsatzsteuer|Bank|
 
-
-**Schritt 3 - Extrahiere die relevante Kontierung für Kontotyp-Soll und Kontotyp-Haben der Kontierungsregel aus dem Kontierungshandbuch**
-- Ermittle die konkreten und exakten Konto-Nummern und Konto-Bezeichnungen für Kontotyp-Soll und Kontotyp-Haben aus dem Kontierungshandbuch anhand
-  der gefundenen Kontierungsregel 
-- Bestimme die exakten Buchungsbeträge aus den Informationen des Geschäftsfalls
-- Beachte Spezialregelungen (z.B. für Steuern, Rückstellungen, Abschreibungen)
+**Schritt 3 - Ermittle Buchungsbeträge und besondere Regelungen**
+- Bestimme die exakten Buchungsbeträge aus den Informationen des Geschäftsfalls.
+- Beachte Spezialregelungen (z.B. für Steuern, Rückstellungen, Abschreibungen) anhand der Geschäftsfall-Details und des {context}.
 
 **Schritt 4 - Prüfe die Qualität des Ergebnisses**
-- Prüfe die Kontierung (Konto Soll an Konto Haben)
-- Prüfe die doppelte Buchführung (Betrag Soll = Betrag Haben)
-- Stelle Übereinstimmung mit gesetzlichen Anforderungen sicher
-- Verifiziere die inhaltliche Korrektheit der Kontierung
+- Prüfe die Kontierung (Konto Soll an Konto Haben) auf Basis der extrahierten Regeln.
+- Prüfe die doppelte Buchführung (Betrag Soll = Betrag Haben).
+- Stelle Übereinstimmung mit buchhalterischen Prinzipien sicher.
+- Verifiziere die inhaltliche Korrektheit der Kontierung.
 
-**Schritt 5 - Gib die Ergebnisse aus**
+**Schritt 5 - Übersetze und gib die Ergebnisse im definierten HTML-Format aus**
 
-- Entferne Duplikate und redundante Informationen
-- Priorisiere die relevantesten und spezifischsten Kontierungen
-- Strukturiere das Ergebnis klar und übersichtlich
+- **Übersetze alle ermittelten Informationen (Geschäftsfallbezeichnung, Geschäftsfall-Kategorie, Kontenbezeichnungen, Erläuterung, Währung, fehlende Informationen) in die in Schritt 1 ermittelte Zielsprache.**
+- **Ersetze die Platzhalter in GROSSBUCHSTABEN im unten definierten HTML-Antwortformat durch die korrekte Übersetzung des Konzepts (z.B. [GESCHÄFTSFALL_UEBERSCHRIFT] -> "Business Case:") in die Zielsprache.**
+- Füge die übersetzten Informationen in das HTML-Format ein.
+- Stelle sicher, dass deine *gesamte* Ausgabe, einschließlich aller HTML-Labels und Texte, ausschließlich in der Zielsprache erfolgt und keine deutschen Textelemente aus dem Prompt oder Kontext enthält, außer den Kontonummern, die unverändert bleiben.
+- Entferne Duplikate und redundante Informationen.
+- Priorisiere die relevantesten und spezifischsten Kontierungen.
+- Strukturiere das Ergebnis klar und übersichtlich.
+- Die Ausgabe muss im HTML-Format erfolgen und darf keine Code-Block-Markierungen enthalten.
+- Die Ausgabe darf keine persönlichen Daten oder sensiblen Informationen enthalten.
+- Die Ausgabe darf keine nicht relevanten Informationen enthalten.
 
-- Gib folgende Informationen des Ergebnisses aus:
-    + Geschäftsfallbezeichnung
-    + Geschäftsfall-Kategorie
-    + Exakte Kontierungsinformation mit Kontonummern für Konto-Soll und Konto-Haben und den Konten-Bezeichnungen
-    + Soll-Haben-Beziehung mit Beträgen
-
-- Prüfe die Ausgabe entsprechend der oben ausgeführten Schritte und achte darauf, dass: 
-    die Informationen klar und strukturiert präsentiert werden,
-    + die Ausgabe in HTML-Format erfolgt und keine Code-Block-Markierungen enthält,
-    + die Kontierungsinformationen vollständig und korrekt sind,
-    + die Ausgabe keine überflüssigen Informationen enthält,
-    + die Ausgabe keine persönlichen Daten oder sensiblen Informationen enthält,
-    + die Ausgabe keine nicht relevanten Informationen enthält.
-
-- Antwortformat:
+- **Antwortformat (Muss verwendet und gemäß den obigen Anweisungen übersetzt und ausgefüllt werden):**
 <div class="buchungssatz">
-  <h2>Geschäftsfall: [PRÄZISE BEZEICHNUNG GESCHÄFTSFALL]</h2>
-  <h3>Geschäftsfall-Kategorie: [GESCHÄFTSFALL-KATEGORIE]</h3>
+  <h2>[GESCHÄFTSFALL_UEBERSCHRIFT]: [ÜBERSETZTE_PRÄZISE_BEZEICHNUNG_GESCHÄFTSFALL]</h2>
+  <h3>[GESCHÄFTSFALL_KATEGORIE_UEBERSCHRIFT]: [ÜBERSETZTE_GESCHÄFTSFALL-KATEGORIE]</h3>
   <div class="kontierung">
     <table>
       <tr>
-        <th>Soll</th>
-        <th>Haben</th>
-        <th>Betrag</th>
+        <th>[SOLL_LABEL]</th>
+        <th>[HABEN_LABEL]</th>
+        <th>[BETRAG_LABEL]</th>
       </tr>
       <tr>
-        <td>[KONTO-NR] - [BEZEICHNUNG]</td>
-        <td>[KONTO-NR] - [BEZEICHNUNG]</td>
-        <td>[BETRAG] [WÄHRUNG]</td>
+        <td>[KONTO-NR] - [ÜBERSETZTE_BEZEICHNUNG]</td>
+        <td>[KONTO-NR] - [ÜBERSETZTE_BEZEICHNUNG]</td>
+        <td>[BETRAG] [ÜBERSETZTE_WAEHRUNG_LABEL]</td>
       </tr>
-      <!-- Weitere Zeilen bei Bedarf -->
-    </table>
+      </table>
   </div>
   <div class="erläuterung">
-    <p>[KURZE BEGRÜNDUNG DER KONTIERUNG]</p>
+    <p>[ÜBERSETZTER_ERLAEUTERUNG_TEXT]</p>
   </div>
 </div>
 
 ## Wenn keine passende Kontierung gefunden werden kann:
+- **Verwende das folgende HTML-Antwortformat.**
+- **Ersetze den Platzhalter [KEINE_KONTIERUNG_TEXT] durch die korrekte Übersetzung des folgenden Satzes in die Zielsprache: "Für diesen Geschäftsfall konnte keine passende Kontierung in den bereitgestellten Regeln ermittelt werden. Es fehlen folgende Informationen: [FEHLENDE INFORMATIONEN]"**
+
 <div class="keine-kontierung">
-  <p>Für diesen Geschäftsfall konnte keine passende Kontierung in den bereitgestellten Regeln ermittelt werden. 
-  Es fehlen folgende Informationen: [FEHLENDE INFORMATIONEN]</p>
+  <p>[KEINE_KONTIERUNG_TEXT]</p>
 </div>
 """
 prompt_template_html = PromptTemplate(template=prompt_template_html, input_variables=["context","question"])
