@@ -27,7 +27,7 @@
 # Importiere die benötigten Module und Standardbibliotheken:
 # pip install -r requirements.txt
 # Starte App  Modul B
-# cd /home/user/projects/BE_AI_UC_digital_posting_assistant_build1/BE_AI_DPA_APP && python3 app.py
+# cd /home/user/projects/BE_AI_UC_digital_posting_assistant_build1/BE_AI_DPA_APP && python3 app_modulB.py
 
 
 from flask import Flask, render_template, request, jsonify, session
