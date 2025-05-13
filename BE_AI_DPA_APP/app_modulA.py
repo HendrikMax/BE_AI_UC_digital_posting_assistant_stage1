@@ -123,7 +123,7 @@ def index():
     files = os.listdir(app.config['UPLOAD_FOLDER']) if os.path.exists(app.config['UPLOAD_FOLDER']) else []
     # Zeige den zuletzt hochgeladenen Dateinamen an, falls vorhanden
     last_filename = files[-1] if files else None
-    return render_template('index.html', files=files, last_filename=last_filename)
+    return render_template('index_modulA.html', files=files, last_filename=last_filename)
 
 
 # Route: Verarbeitung (Chunking & Upload in HANA-DB)
